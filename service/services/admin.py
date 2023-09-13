@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from services.models import Service, Plan, Subscrition
+from services.models import Service, Plan, Subscription
 
 # Register your models here.
 admin.site.register(Service)
 admin.site.register(Plan)
-admin.site.register(Subscrition)
+admin.site.register(Subscription)

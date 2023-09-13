@@ -25,10 +25,10 @@ class Plan(models.Model):
     def __str__(self):
         return f"Type: {self.plan_type}  Discount: {self.discount_percent}"
 
-class Subscrition(models.Model):
-    client = models.ForeignKey(Client, related_name='subscription', on_delete=models.PROTECT)
-    service = models.ForeignKey(Service, related_name='subscription', on_delete=models.PROTECT)
-    plan = models.ForeignKey(Plan, related_name='subscription', on_delete=models.PROTECT)
+class Subscription(models.Model):
+    client = models.ForeignKey(Client, related_name='Subscription', on_delete=models.PROTECT)
+    service = models.ForeignKey(Service, related_name='Subscription', on_delete=models.PROTECT)
+    plan = models.ForeignKey(Plan, related_name='Subscription', on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.client.company_name}.  {self.service},  discount: {self.plan.discount_percent}"
