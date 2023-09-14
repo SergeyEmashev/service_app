@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'clients',
-    'services'
+    'services',
 ]
 
 MIDDLEWARE = [
@@ -141,7 +141,7 @@ LOGGING = {
     'handlers': {
         'console': {'class': 'logging.StreamHandler'}
     },
-    'loggers':{
+    'loggers': {
         'django.db.backends': {
             'handlers': ['console'],
             'level': 'DEBUG'

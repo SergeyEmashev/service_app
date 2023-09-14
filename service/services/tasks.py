@@ -9,4 +9,4 @@ def set_price(subscription_id):
     new_price = (subscription.service.full_price -
                  subscription.service.full_price * subscription.plan.discount_percent / 100)
     subscription.price = new_price
-    subscription.save(save_model=False)
+    subscription.save()

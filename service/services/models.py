@@ -2,7 +2,8 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 
 from clients.models import Client
-from tasks import set_price
+from services.tasks import set_price
+
 
 # Create your models here.
 
@@ -25,20 +26,24 @@ class Plan(models.Model):
     discount_percent = models.PositiveIntegerField(default=0,
                                                    validators=[MaxValueValidator(100)])
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__discount_percent = self.discount_percent
+
+    def save(self, *args, **kwargs):
+        for subscription in self.subscriptions.all():
+            set_price.delay(subscription.id)
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Type: {self.plan_type}  Discount: {self.discount_percent}"
 
 
 class Subscription(models.Model):
-    client = models.ForeignKey(Client, related_name='Subscription', on_delete=models.PROTECT)
-    service = models.ForeignKey(Service, related_name='Subscription', on_delete=models.PROTECT)
-    plan = models.ForeignKey(Plan, related_name='Subscription', on_delete=models.PROTECT)
+    client = models.ForeignKey(Client, related_name='subscriptions', on_delete=models.PROTECT)
+    service = models.ForeignKey(Service, related_name='subscriptions', on_delete=models.PROTECT)
+    plan = models.ForeignKey(Plan, related_name='subscriptions', on_delete=models.PROTECT)
     price = models.PositiveIntegerField(default=0)
-
-    def save(self, *args, save_model=True, **kwargs):
-        set_price.delay(self.id)
-
-        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.client.company_name}.  {self.service},  discount: {self.plan.discount_percent}"
